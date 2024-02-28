@@ -1,0 +1,107 @@
+{
+    "os": "Linux-6.0.12-76060012-generic-x86_64-with-glibc2.10",
+    "python": "3.8.5",
+    "heartbeatAt": "2024-02-02T20:26:49.551771",
+    "startedAt": "2024-02-02T20:26:48.910954",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--track"
+    ],
+    "state": "running",
+    "program": "discrete_SQL.py",
+    "codePath": "discrete_SQL/discrete_SQL.py",
+    "git": {
+        "remote": "https://github.com/HyperPotatoNeo/Advantage-Diffusion.git",
+        "commit": "97f68b7f19fc86500261f978a5825cf9de8f43c4"
+    },
+    "email": "siddartv@andrew.cmu.edu",
+    "root": "/home/hyperpotato/Advantage-Diffusion",
+    "host": "pop-os",
+    "username": "hyperpotato",
+    "executable": "/home/hyperpotato/anaconda3/envs/decision-transformer-gym/bin/python3",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 4020.6366666666668,
+        "min": 800.0,
+        "max": 5000.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4398.176,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4380.461,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4303.492,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4200.044,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 2600.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4391.932,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4199.956,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4200.746,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 2600.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4396.574,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4297.384,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4278.875,
+            "min": 800.0,
+            "max": 5000.0
+        }
+    ],
+    "disk": {
+        "total": 135.75995635986328,
+        "used": 114.69853973388672
+    },
+    "gpu": "NVIDIA GeForce RTX 2070 with Max-Q Design",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2070 with Max-Q Design",
+            "memory_total": 8370061312
+        }
+    ],
+    "memory": {
+        "total": 15.492328643798828
+    }
+}
