@@ -1,0 +1,36 @@
+method: "bayes"
+metric:
+  name: "episodic_return"
+  goal: "maximize"
+parameters:
+  alpha:
+    distribution: "uniform"
+    min: 0.025
+    max: 0.1
+  batch_size:
+    distribution: "int_uniform"
+    min: 128
+    max: 512
+  exploration_alpha:
+    distribution: "uniform"
+    min: 0.025
+    max: 0.1
+  gamma:
+    distribution: "uniform"
+    min: 0.495
+    max: 1.98
+  separate_explore_alpha:
+    distribution: "categorical"
+    values: ["true", "false"]
+  target_entropy:
+    distribution: "int_uniform"
+    min: 1
+    max: 4
+  target_network_frequency:
+    distribution: "int_uniform"
+    min: 1
+    max: 2
+  tau:
+    distribution: "uniform"
+    min: 0
+    max: 0.01
