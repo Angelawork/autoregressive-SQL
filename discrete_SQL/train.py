@@ -15,6 +15,7 @@ from model import QTransformer, ARQ
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 import stable_baselines3 as sb3
+from discrete_SQL import parse_args()
 
 def make_env(env_id, seed, idx, capture_video, run_name):
     def thunk():
@@ -28,6 +29,7 @@ def make_env(env_id, seed, idx, capture_video, run_name):
         return env
 
     return thunk
+
 sweep_config = {
     "method": "bayes",
     "metric": {
@@ -37,15 +39,15 @@ sweep_config = {
     "parameters": {
         "alpha": {
             "distribution": "uniform",
-            "min": 0.025,
-            "max": 0.1,
+            "min": 0.005,
+            "max": 0.05,
         },
-        "batch_size": {
+        "batch-size": {
             "distribution": "int_uniform",
             "min": 128,
             "max": 512,
         },
-        "exploration_alpha": {
+        "exploration-alpha": {
             "distribution": "uniform",
             "min": 0.025,
             "max": 0.1,
@@ -55,16 +57,16 @@ sweep_config = {
             "min": 0.495,
             "max": 1.98,
         },
-        "separate_explore_alpha": {
+        "separate-explore-alpha": {
             "distribution": "categorical",
             "values": ["true", "false"],
         },
-        "target_entropy": {
+        "target-entropy": {
             "distribution": "int_uniform",
             "min": 1,
             "max": 4,
         },
-        "target_network_frequency": {
+        "target-network-frequency": {
             "distribution": "int_uniform",
             "min": 1,
             "max": 2,
@@ -77,8 +79,18 @@ sweep_config = {
     }
 }
 
+def merge_configs(default_args, wandb_config):
+    config = vars(default_args)
+    for key in wandb_config.keys():
+        if key in config:
+            config[key] = wandb_config[key]
+    return config
+
 if __name__ == "__main__": 
-    args = sweep_config
+    config = wandb.config
+    args = parse_args()
+    args = merge_configs(args, config)
+
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
         import wandb
