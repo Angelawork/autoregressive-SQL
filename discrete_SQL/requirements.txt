@@ -1,0 +1,9 @@
+wandb
+tensorboard
+gymnasium[mujoco]
+gymnasium
+torch
+stable_baselines3
+seaborn
+matplotlib
+numpy

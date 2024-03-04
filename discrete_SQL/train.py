@@ -1,7 +1,12 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/sac/#sac_continuous_actionpy
 import argparse
 import os
+import wandb
+import subprocess
 import random
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 import time
 from distutils.util import strtobool
 
@@ -15,7 +20,7 @@ from model import QTransformer, ARQ
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 import stable_baselines3 as sb3
-from discrete_SQL import parse_args()
+from discrete_SQL import parse_args
 
 def make_env(env_id, seed, idx, capture_video, run_name):
     def thunk():
@@ -79,15 +84,17 @@ sweep_config = {
     }
 }
 
-def merge_configs(default_args, wandb_config):
+def merge_configs(default_args, wandb_c):
     config = vars(default_args)
-    for key in wandb_config.keys():
+    for key in wandb_c.keys():
         if key in config:
-            config[key] = wandb_config[key]
-    return config
+            config[key] = wandb_c[key]
+    merged_args = argparse.Namespace(**config)
+
+    return merged_args
 
 if __name__ == "__main__": 
-    config = wandb.config
+    config = sweep_config
     args = parse_args()
     args = merge_configs(args, config)
 
