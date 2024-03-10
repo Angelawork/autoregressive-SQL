@@ -36,50 +36,34 @@ def make_env(env_id, seed, idx, capture_video, run_name):
     return thunk
 
 sweep_config = {
+    "program": "train.py",
     "method": "bayes",
     "metric": {
         "name": "episodic_return",  
         "goal": "maximize"
     },
     "parameters": {
-        "alpha": {
-            "distribution": "uniform",
-            "min": 0.005,
-            "max": 0.05,
+        "wandb_entity": {
+            "value": "angela-h"
         },
-        "batch-size": {
-            "distribution": "int_uniform",
-            "min": 128,
-            "max": 512,
+        "wandb_project_name": {
+            "value": "sweep_attempt" 
         },
-        "exploration-alpha": {
-            "distribution": "uniform",
-            "min": 0.025,
-            "max": 0.1,
+        "track": {
+            "value": True
         },
-        "gamma": {
-            "distribution": "uniform",
-            "min": 0.495,
-            "max": 1.98,
-        },
-        "separate-explore-alpha": {
-            "distribution": "categorical",
-            "values": ["true", "false"],
+        "total_timesteps": {
+            "value": 150000
         },
         "target-entropy": {
             "distribution": "int_uniform",
-            "min": 1,
+            "min": -4,
             "max": 4,
         },
         "target-network-frequency": {
             "distribution": "int_uniform",
             "min": 1,
-            "max": 2,
-        },
-        "tau": {
-            "distribution": "uniform",
-            "min": 0,
-            "max": 0.01,
+            "max": 1000,
         },
     }
 }
@@ -93,15 +77,8 @@ def merge_configs(default_args, wandb_c):
 
     return merged_args
 
-if __name__ == "__main__": 
-    config = sweep_config
-    args = parse_args()
-    args = merge_configs(args, config)
-
-    run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
+def run(args,run_name):
     if args.track:
-        import wandb
-
         wandb.init(
             project=args.wandb_project_name,
             entity=args.wandb_entity,
@@ -298,3 +275,23 @@ if __name__ == "__main__":
                 writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
                 if args.autotune:
                     writer.add_scalar("losses/alpha_loss", alpha_loss.item(), global_step)
+
+def main():
+    environments = ["Hopper-v4","Ant-v2", "Swimmer-v2"]
+    seeds = [42, 128, 456]
+
+    config = sweep_config
+    args = parse_args()
+    args = merge_configs(args, config)
+
+    for env_id in environments:
+        for seed in seeds:
+            args.env_id = env_id 
+            args.seed = seed 
+            run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"          
+            run(args,run_name)
+    if args.track:
+        wandb.finish()
+            
+if __name__ == "__main__": 
+    main()
