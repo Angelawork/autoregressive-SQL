@@ -76,7 +76,7 @@ if __name__ == "__main__":
     }
 
     hyperparameter_space = {
-        "--target-entropy": [1, 2, 2.5, 3, 4],
+        "--target-entropy": [1.0, 2.0, 2.5, 3.0, 4.0],
         "--target-network-frequency":[1,2,5],
         "--q-steps":[1,3,5],
         "--alpha":[0.01, 0.05, 0.1, 0.2],

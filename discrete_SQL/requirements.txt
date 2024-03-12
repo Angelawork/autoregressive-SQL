@@ -1,5 +1,5 @@
 wandb
-gymnasium
+gymnasium>=0.29
 gymnasium[mujoco]
 stable-baselines3
 numpy
