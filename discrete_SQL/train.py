@@ -43,16 +43,16 @@ sweep_config = {
         "goal": "maximize"
     },
     "parameters": {
-        "wandb_entity": {
+        "wandb-entity": {
             "value": "angela-h"
         },
-        "wandb_project_name": {
+        "wandb-project-name": {
             "value": "sweep_attempt" 
         },
         "track": {
             "value": True
         },
-        "total_timesteps": {
+        "total-timesteps": {
             "value": 150000
         },
         "target-entropy": {
@@ -78,16 +78,7 @@ def merge_configs(default_args, wandb_c):
     return merged_args
 
 def run(args,run_name):
-    if args.track:
-        wandb.init(
-            project=args.wandb_project_name,
-            entity=args.wandb_entity,
-            sync_tensorboard=True,
-            config=vars(args),
-            name=run_name,
-            monitor_gym=True,
-            save_code=True,
-        )
+    
     writer = SummaryWriter(f"runs/{run_name}")
     writer.add_text(
         "hyperparameters",
@@ -277,7 +268,7 @@ def run(args,run_name):
                     writer.add_scalar("losses/alpha_loss", alpha_loss.item(), global_step)
 
 def main():
-    environments = ["Hopper-v4","Ant-v2", "Swimmer-v2"]
+    environments = ["Hopper-v4","Ant-v4", "Swimmer-v4"]
     seeds = [42, 128, 456]
 
     config = sweep_config
@@ -288,7 +279,15 @@ def main():
         for seed in seeds:
             args.env_id = env_id 
             args.seed = seed 
-            run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"          
+            run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
+            if args.track:
+                wandb.init(
+                    sync_tensorboard=True,
+                    config=vars(args),
+                    name=run_name,
+                    monitor_gym=True,
+                    save_code=True,
+                )    
             run(args,run_name)
     if args.track:
         wandb.finish()

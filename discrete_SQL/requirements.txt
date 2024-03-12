@@ -1,9 +1,11 @@
 wandb
-tensorboard
-gymnasium[mujoco]
 gymnasium
+gymnasium[mujoco]
+stable-baselines3
+numpy
 torch
-stable_baselines3
+torchvision
+torchtext
 seaborn
 matplotlib
-numpy
+tensorboard
