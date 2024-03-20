@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#SBATCH --job-name=hparam-autotune
+#SBATCH --job-name=SQL_Pend2
 #SBATCH --output=hparam_tuning_%j.out
 #SBATCH --error=hparam_tuning_%j.err
-#SBATCH --time=72:00:00
+#SBATCH --time=120:00:00
  #SBATCH --gpus-per-task=rtx8000:1
- #SBATCH --cpus-per-task=4
+ #SBATCH --cpus-per-task=6
  #SBATCH --ntasks-per-node=1
-#SBATCH --mem=50G
+#SBATCH --mem=70G
 
 # Echo time and hostname into log
 echo "Date:     $(date)"
@@ -15,6 +15,9 @@ echo "Hostname: $(hostname)"
 
 # Load any modules and activate your Python environment here
 module load python/3.8  
+
+#Xvfb :1 -screen 0 1024x768x16 &
+export DISPLAY=:1
 
 # Clone repo if not present
 if [ ! -d "autoregressive-SQL" ]; then

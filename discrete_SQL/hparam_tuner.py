@@ -59,7 +59,7 @@ def run(set_up, hparams, env_id, seed):
 
     return final_episodic_return
 
-def hparam_tuning(set_up, hparam_space, seeds, environments,num_samples=5):
+def hparam_tuning(set_up, hparam_space, seeds, environments,num_samples):
     results = []
     #hparam_combinations = grid_search(hparam_space)
     hparam_combinations = random_search(hparam_space, num_samples)
@@ -81,20 +81,21 @@ if __name__ == "__main__":
     set_up = {
         "--total-timesteps": 250000,
         "--track": True,
-        "--wandb-project-name": "SQL_autotune_Hopperv4",
+        "--wandb-project-name": "SQL_autotune_Pendulum",
         "--wandb-entity": "angela-h",
         "--separate-explore-alpha": True,
         "--autotune":True,
         "--target-network-frequency": 1,
+        "--capture-video":True,
     }
 
     hyperparameter_space = {
-        "--target-entropy": [2.0,4.0, 6.0, 8.0],
-        "--q-steps":[1,3,5],
+        "--target-entropy": [1],
+        "--q-steps":[1],
         #"--alpha":[0.01, 0.05, 0.1, 0.2],
         #"--exploration-alpha":[0.01, 0.05, 0.15, 0.25],
     }
 
-    environments = ["SQL_autotune_Swimmerv4"] #,"Swimmer-v4","Ant-v4","Walker2d-v4"
-    seeds = [42, 128, 456]
-    results = hparam_tuning(set_up, hyperparameter_space, seeds, environments)
+    environments = ["InvertedPendulum-v4"] #,"Swimmer-v4","Ant-v4","Walker2d-v4"
+    seeds = [42]
+    results = hparam_tuning(set_up, hyperparameter_space, seeds, environments,num_samples=1)

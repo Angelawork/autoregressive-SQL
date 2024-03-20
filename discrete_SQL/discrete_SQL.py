@@ -15,6 +15,27 @@ from model import QTransformer, ARQ
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 
+def save_replay_buffer(replay_buffer, path):
+    with open(path, "wb") as f:
+        data = {
+            "observations": replay_buffer.observations,
+            "actions": replay_buffer.actions,
+            "rewards": replay_buffer.rewards,
+            "next_observations": replay_buffer.next_observations,
+            "dones": replay_buffer.dones,
+            "size": replay_buffer.size,
+            "pos": replay_buffer.pos,
+            "full": replay_buffer.full,
+        }
+        pickle.dump(data, f)
+
+def save_model(args, step, qf1, qf2, q_optimizer, replay_buffer, save_path="./saved_models"):
+    os.makedirs(save_path, exist_ok=True)
+    torch.save(qf1.state_dict(), os.path.join(save_path, f"qf1_{step}_{args.env_id}__{args.exp_name}__{args.seed}_.pth"))
+    torch.save(qf2.state_dict(), os.path.join(save_path, f"qf2_{step}_{args.env_id}__{args.exp_name}__{args.seed}_.pth"))
+    torch.save(q_optimizer.state_dict(), os.path.join(save_path, f"q_optim_{step}_{args.env_id}__{args.exp_name}__{args.seed}_.pth"))
+    save_replay_buffer(replay_buffer, os.path.join(save_path, f"rb_{step}_{args.env_id}__{args.exp_name}__{args.seed}_.pkl"))
+
 
 def parse_args():
     # fmt: off
@@ -75,7 +96,7 @@ def parse_args():
     # fmt: on
     return args
 
-def make_env(env_id, seed, idx, capture_video, run_name,step_list=[100000,150000,175000,200000,250000]):
+def make_env(env_id, seed, idx, capture_video, run_name,step_list=[100,100000,150000,175000,200000,250000]):
     def thunk():
         if capture_video and idx == 0:
             env = gym.make(env_id, render_mode="rgb_array")
@@ -281,9 +302,13 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             
             if global_step % args.target_network_frequency == 0:
                 for param, target_param in zip(qf1.parameters(), qf1_target.parameters()):
-                        target_param.data.copy_(args.tau * param.data + (1 - args.tau) * target_param.data)
+                    target_param.data.copy_(args.tau * param.data + (1 - args.tau) * target_param.data)
                 for param, target_param in zip(qf2.parameters(), qf2_target.parameters()):
                     target_param.data.copy_(args.tau * param.data + (1 - args.tau) * target_param.data)
+            
+            if global_step % 249000 == 0:
+                print(f"model saved at step {global_step}")
+                save_model(args, global_step, qf1, qf2, q_optimizer, rb)
                 
             if global_step % 100 == 0:
                 writer.add_scalar("losses/qf1_values", qf1_a_values.mean().item(), global_step)
