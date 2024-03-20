@@ -28,6 +28,16 @@ def grid_search(hyperparameter_space):
     comb = [dict(zip(keys, c)) for c in itertools.product(*values)]
     return comb
 
+def random_search(hyperparameter_space, num_samples):
+    """Randomly sample combinations in hyperparameters' space."""
+    sampled = []
+    for _ in range(num_samples):
+        sampled_comb = {}
+        for key in hyperparameter_space:
+            sampled_comb[key] = random.choice(hyperparameter_space[key])
+        sampled.append(sampled_comb)
+    return sampled
+
 def run(set_up, hparams, env_id, seed):
     """Run training script with specified hparam."""
     hparams_str = "_".join([f"{k}{v}" for k, v in hparams.items()])
@@ -49,9 +59,10 @@ def run(set_up, hparams, env_id, seed):
 
     return final_episodic_return
 
-def hparam_tuning(set_up, hparam_space, seeds, environments):
+def hparam_tuning(set_up, hparam_space, seeds, environments,num_samples=5):
     results = []
-    hparam_combinations = grid_search(hparam_space)
+    #hparam_combinations = grid_search(hparam_space)
+    hparam_combinations = random_search(hparam_space, num_samples)
     for env_id in environments:
         for hparams in hparam_combinations:
             final_returns = []
@@ -68,21 +79,22 @@ def hparam_tuning(set_up, hparam_space, seeds, environments):
 
 if __name__ == "__main__":
     set_up = {
-        "--total-timesteps": 150000,
+        "--total-timesteps": 250000,
         "--track": True,
-        "--wandb-project-name": "sweep_attempt",
+        "--wandb-project-name": "SQL_autotune_Hopperv4",
         "--wandb-entity": "angela-h",
         "--separate-explore-alpha": True,
+        "--autotune":True,
+        "--target-network-frequency": 1,
     }
 
     hyperparameter_space = {
-        "--target-entropy": [1.0, 2.0, 2.5, 3.0, 4.0],
-        "--target-network-frequency":[1,2,5],
+        "--target-entropy": [2.0,4.0, 6.0, 8.0],
         "--q-steps":[1,3,5],
-        "--alpha":[0.01, 0.05, 0.1, 0.2],
-        "--exploration-alpha":[0.01, 0.05, 0.15, 0.25],
+        #"--alpha":[0.01, 0.05, 0.1, 0.2],
+        #"--exploration-alpha":[0.01, 0.05, 0.15, 0.25],
     }
 
-    environments = ["Hopper-v4","Swimmer-v4"] #"Ant-v4","Walker2d-v4"
+    environments = ["SQL_autotune_Swimmerv4"] #,"Swimmer-v4","Ant-v4","Walker2d-v4"
     seeds = [42, 128, 456]
     results = hparam_tuning(set_up, hyperparameter_space, seeds, environments)

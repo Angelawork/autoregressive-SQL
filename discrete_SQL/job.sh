@@ -1,12 +1,13 @@
 #!/bin/bash
 
-#SBATCH --job-name=hparam-tuning
+#SBATCH --job-name=hparam-autotune
 #SBATCH --output=hparam_tuning_%j.out
 #SBATCH --error=hparam_tuning_%j.err
-#SBATCH --time=24:00:00
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --mem=16G
+#SBATCH --time=72:00:00
+ #SBATCH --gpus-per-task=rtx8000:1
+ #SBATCH --cpus-per-task=4
+ #SBATCH --ntasks-per-node=1
+#SBATCH --mem=50G
 
 # Echo time and hostname into log
 echo "Date:     $(date)"
