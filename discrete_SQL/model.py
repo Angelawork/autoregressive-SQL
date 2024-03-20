@@ -80,15 +80,15 @@ class QMLP(nn.Module):
         
         self.fc1 = nn.Linear(state_dim, h_dim)
         self.fc2 = nn.Linear(h_dim, h_dim)
-        self.fc3 = nn.Linear(h_dim, h_dim)
-        self.fc4 = nn.Linear(h_dim, a_bins)
-        self.ln = nn.LayerNorm(h_dim)
+        self.fc3 = nn.Linear(h_dim, a_bins)
+
+        self.ln1 = nn.LayerNorm(h_dim)
+        self.ln2 = nn.LayerNorm(h_dim)
         
     def forward(self, s):
-        x = F.relu(self.ln(self.fc1(s)))
-        x = F.relu(self.ln(self.fc2(x)))
-        x = F.relu(self.ln(self.fc3(x)))
-        x = self.fc4(x)
+        x = F.relu(self.ln1(self.fc1(s)))
+        x = F.relu(self.ln2(self.fc2(x)))
+        x = self.fc3(x)
         return x
     
 # AutoRegressive Q function
